@@ -1,32 +1,17 @@
 import { Client, ClientDetail, Message, Property } from "./types";
-import { mockClients, mockClientsDetail } from "./mocks/clients";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export async function getClients(): Promise<Client[]> {
-  // Si tienes una API real, descomenta esto:
   const response = await fetch(`${BASE_URL}/clients`);
-  if (!response.ok) throw new Error("Failed to fetch clients");
+  if (!response.ok) throw new Error(`Failed to fetch clients: ${response.status} ${response.statusText}`);
   return response.json();
-
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(mockClients), 500);
-  });
 }
 
 export async function getClientDetail(id: number): Promise<ClientDetail> {
-  // Si tienes una API real, descomenta esto:
   const response = await fetch(`${BASE_URL}/clients/${id}`);
-  if (!response.ok) throw new Error("Failed to fetch client");
+  if (!response.ok) throw new Error(`Failed to fetch client: ${response.status} ${response.statusText}`);
   return response.json();
-
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const client = mockClientsDetail[id];
-      if (client) resolve(client);
-      else reject(new Error("Client not found"));
-    }, 500);
-  });
 }
 
 export async function getProperties(): Promise<Property[]> {
