@@ -2,6 +2,8 @@ import { getClientDetail } from "@/lib/api";
 import ClientDetail from "@/components/clients/ClientDetail";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ id: string }>;
 }
