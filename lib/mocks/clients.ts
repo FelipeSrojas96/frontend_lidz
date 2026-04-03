@@ -1,9 +1,9 @@
 import { Client, ClientDetail } from "../types";
 
 export const mockClients: Client[] = [
-  { id: 1, name: "Juan Perez", rut: "11.111.111-1", salary: 1000000, savings: 5000000, score: 40 },
-  { id: 2, name: "Pedro Soto", rut: "21.111.111-1", salary: 800000, savings: 7000000, score: 75 },
-  { id: 3, name: "María García", rut: "31.111.111-1", salary: 1200000, savings: 3000000, score: 85 },
+  { id: 1, name: "Juan Perez", rut: "11.111.111-1", salary: 1000000, savings: 5000000 },
+  { id: 2, name: "Pedro Soto", rut: "21.111.111-1", salary: 800000, savings: 7000000 },
+  { id: 3, name: "María García", rut: "31.111.111-1", salary: 1200000, savings: 3000000 },
 ];
 
 export const mockClientsDetail: Record<number, ClientDetail> = {
