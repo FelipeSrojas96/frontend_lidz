@@ -66,6 +66,7 @@ export default function MessageThread({ clientId, initialMessages }: MessageThre
 
     try {
       const agentMessage = await sendFollowUp(clientId, text);
+      console.log(agentMessage)
       setMessages((prev) => [...prev, agentMessage]);
     } catch {
       setError("No se pudo enviar el mensaje. Intenta nuevamente.");
