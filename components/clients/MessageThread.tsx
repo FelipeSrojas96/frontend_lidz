@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Message } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import { sendFollowUp } from "@/lib/api";
@@ -15,6 +15,37 @@ export default function MessageThread({ clientId, initialMessages }: MessageThre
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const loadingRef = useRef(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    async function sendAutoFollowUp() {
+      if (loadingRef.current) return;
+      loadingRef.current = true;
+      setLoading(true);
+      try {
+        const agentMessage = await sendFollowUp(clientId, "");
+        if (!agentMessage.text?.trim()) {
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
+          return;
+        }
+        setMessages((prev) => [...prev, agentMessage]);
+      } catch {
+        // silently ignore auto follow-up errors
+      } finally {
+        loadingRef.current = false;
+        setLoading(false);
+      }
+    }
+
+    intervalRef.current = setInterval(sendAutoFollowUp, 60_000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [clientId]);
 
   async function handleSend() {
     const text = input.trim();
@@ -29,6 +60,7 @@ export default function MessageThread({ clientId, initialMessages }: MessageThre
 
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
+    loadingRef.current = true;
     setLoading(true);
     setError(null);
 
@@ -38,6 +70,7 @@ export default function MessageThread({ clientId, initialMessages }: MessageThre
     } catch {
       setError("No se pudo enviar el mensaje. Intenta nuevamente.");
     } finally {
+      loadingRef.current = false;
       setLoading(false);
     }
   }
